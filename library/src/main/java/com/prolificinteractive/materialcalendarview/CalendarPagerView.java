@@ -2,6 +2,7 @@ package com.prolificinteractive.materialcalendarview;
 
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
@@ -55,11 +56,13 @@ abstract class CalendarPagerView extends ViewGroup implements View.OnClickListen
     }
 
     private void buildWeekDays(Calendar calendar) {
-        for (int i = 0; i < DEFAULT_DAYS_IN_WEEK; i++) {
-            WeekDayView weekDayView = new WeekDayView(getContext(), CalendarUtils.getDayOfWeek(calendar));
-            weekDayViews.add(weekDayView);
-            addView(weekDayView);
-            calendar.add(DATE, 1);
+        if(!mcv.hideWeekBar()){
+            for (int i = 0; i < DEFAULT_DAYS_IN_WEEK; i++) {
+                WeekDayView weekDayView = new WeekDayView(getContext(), CalendarUtils.getDayOfWeek(calendar));
+                weekDayViews.add(weekDayView);
+                addView(weekDayView);
+                calendar.add(DATE, 1);
+            }
         }
     }
 

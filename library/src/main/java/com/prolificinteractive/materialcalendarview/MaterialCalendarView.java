@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -234,6 +235,8 @@ public class MaterialCalendarView extends ViewGroup {
     @SelectionMode
     private int selectionMode = SELECTION_MODE_SINGLE;
     private boolean allowClickDaysOutsideCurrentMonth = true;
+    private boolean hideWeekBar = false;
+    private boolean hideEmptyLines = false;
     private int firstDayOfWeek;
 
     private State state;
@@ -377,6 +380,17 @@ public class MaterialCalendarView extends ViewGroup {
                     R.styleable.MaterialCalendarView_mcv_allowClickDaysOutsideCurrentMonth,
                     true
             ));
+
+            setHideWeekBar(a.getBoolean(
+                    R.styleable.MaterialCalendarView_mcv_hideWeekBar,
+                    false
+            ));
+
+            setHideEmptyLines(a.getBoolean(
+                    R.styleable.MaterialCalendarView_mcv_hideEmptyLines,
+                    false
+            ));
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -389,7 +403,6 @@ public class MaterialCalendarView extends ViewGroup {
 
         currentMonth = CalendarDay.today();
         setCurrentDate(currentMonth);
-
         if (isInEditMode()) {
             removeView(pager);
             MonthView monthView = new MonthView(this, currentMonth, getFirstDayOfWeek());
@@ -927,6 +940,26 @@ public class MaterialCalendarView extends ViewGroup {
     }
 
     /**
+     * Allow to hide week bar
+     * Default value is false.
+     *
+     * @param enabled True to allow the user hide week var
+     */
+    public void setHideWeekBar(boolean enabled) {
+        this.hideWeekBar = enabled;
+    }
+
+    /**
+     * Allow to hide blank lines
+     * Default value is false.
+     *
+     * @param enabled True to allow the user hide week var
+     */
+    public void setHideEmptyLines(boolean enabled) {
+        this.hideEmptyLines = enabled;
+    }
+
+    /**
      * Set a formatter for weekday labels.
      *
      * @param formatter the new formatter, null for default
@@ -988,6 +1021,21 @@ public class MaterialCalendarView extends ViewGroup {
     public boolean allowClickDaysOutsideCurrentMonth() {
         return allowClickDaysOutsideCurrentMonth;
     }
+
+    /**
+     * @return true if hide week bar
+     */
+    public boolean hideWeekBar() {
+        return hideWeekBar;
+    }
+
+    /**
+     * @return true if hide empty
+     */
+    public boolean hideEmptyLines() {
+        return hideEmptyLines;
+    }
+
 
     /**
      * Set a custom formatter for the month/year title
@@ -1072,6 +1120,8 @@ public class MaterialCalendarView extends ViewGroup {
         ss.weekDayTextAppearance = adapter.getWeekDayTextAppearance();
         ss.showOtherDates = getShowOtherDates();
         ss.allowClickDaysOutsideCurrentMonth = allowClickDaysOutsideCurrentMonth();
+        ss.hideWeekBar = hideWeekBar();
+        ss.hideEmptyLines = hideEmptyLines();
         ss.minDate = getMinimumDate();
         ss.maxDate = getMaximumDate();
         ss.selectedDates = getSelectedDates();
@@ -1102,6 +1152,8 @@ public class MaterialCalendarView extends ViewGroup {
         setWeekDayTextAppearance(ss.weekDayTextAppearance);
         setShowOtherDates(ss.showOtherDates);
         setAllowClickDaysOutsideCurrentMonth(ss.allowClickDaysOutsideCurrentMonth);
+        setHideWeekBar(ss.hideWeekBar);
+        setHideEmptyLines(ss.hideEmptyLines);
         clearSelection();
         for (CalendarDay calendarDay : ss.selectedDates) {
             setDateSelected(calendarDay, true);
@@ -1144,6 +1196,8 @@ public class MaterialCalendarView extends ViewGroup {
         int weekDayTextAppearance = 0;
         int showOtherDates = SHOW_DEFAULTS;
         boolean allowClickDaysOutsideCurrentMonth = true;
+        boolean hideWeekBar = false;
+        boolean hideEmptyLines = false;
         CalendarDay minDate = null;
         CalendarDay maxDate = null;
         List<CalendarDay> selectedDates = new ArrayList<>();
@@ -1169,6 +1223,8 @@ public class MaterialCalendarView extends ViewGroup {
             out.writeInt(weekDayTextAppearance);
             out.writeInt(showOtherDates);
             out.writeByte((byte) (allowClickDaysOutsideCurrentMonth ? 1 : 0));
+            out.writeByte((byte) (hideWeekBar ? 1 : 0));
+            out.writeByte((byte) (hideEmptyLines ? 1 : 0));
             out.writeParcelable(minDate, 0);
             out.writeParcelable(maxDate, 0);
             out.writeTypedList(selectedDates);
@@ -1201,6 +1257,8 @@ public class MaterialCalendarView extends ViewGroup {
             weekDayTextAppearance = in.readInt();
             showOtherDates = in.readInt();
             allowClickDaysOutsideCurrentMonth = in.readByte() != 0;
+            hideWeekBar = in.readByte() != 0;
+            hideEmptyLines = in.readByte() != 0;
             ClassLoader loader = CalendarDay.class.getClassLoader();
             minDate = in.readParcelable(loader);
             maxDate = in.readParcelable(loader);

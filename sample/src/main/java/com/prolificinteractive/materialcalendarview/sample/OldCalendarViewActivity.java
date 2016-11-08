@@ -19,24 +19,24 @@ public class OldCalendarViewActivity extends AppCompatActivity
 
     private static final DateFormat FORMATTER = SimpleDateFormat.getDateInstance();
 
-    @Bind(R.id.calendarView)
-    CalendarView widget;
-
-    @Bind(R.id.textView)
-    TextView textView;
+//    @Bind(R.id.calendarView)
+//    CalendarView widget;
+//
+//    @Bind(R.id.textView)
+//    TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_old_calendarview);
-        ButterKnife.bind(this);
-
-        widget.setOnDateChangeListener(this);
+//        ButterKnife.bind(this);
+//
+//        widget.setOnDateChangeListener(this);
     }
 
     @Override
     public void onSelectedDayChange(CalendarView view, int year, int month,
                                     int dayOfMonth) {
-        textView.setText(FORMATTER.format(view.getDate()));
+//        textView.setText(FORMATTER.format(view.getDate()));
     }
 }

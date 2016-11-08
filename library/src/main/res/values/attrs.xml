@@ -58,6 +58,10 @@
             <enum name="vertical" value="0" />
             <enum name="horizontal" value="1" />
         </attr>
+        
+        <attr name="mcv_hideWeekBar" format="boolean" />
+        <attr name="mcv_hideEmptyLines" format="boolean" />
+
     </declare-styleable>
 
 </resources>
